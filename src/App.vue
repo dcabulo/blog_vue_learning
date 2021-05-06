@@ -1,62 +1,61 @@
 <template>
-  <h1>{{ title }}</h1>
-  <teleport to=".modals" v-if="showModal">
-    <Modal theme="sale" @close="toggleModal">
-      <template v-slot:links>
-        <a href="#">Sign up now</a>
-        <a href="#">more info</a>
-      </template>
-      <h2>Diego vue</h2>
-      <p>Estory aprendiendo Wi...</p>
-    </Modal>
-  </teleport>
-  <teleport to=".modals" v-if="showModalTwo">
-    <Modal @close="toggleModalTwo">
-      <h2>Second modal</h2>
-      <p>Segundo Modal aprendiendo Wi...</p>
-    </Modal>
-  </teleport>
-  <button @click="toggleModal">Open Modal</button>
-  <button @click="toggleModalTwo">Open Modal Two</button>
+  <h1>Reaction Timer</h1>
+  <button @click="start" :disabled="isPlaying">Play</button>
+  <Block v-if="isPlaying" :delay="delay" @end="endGame" />
+  <Results v-if="showResults" :score="score" />
 </template>
 
 <script>
-import Modal from "./components/Modal";
-
+import Block from "./components/Block";
+import Results from "./components/Results";
 export default {
   name: "App",
-  components: { Modal },
+  components: { Block, Results },
   data() {
     return {
-      title: "My first vue app :)",
-      showModal: false,
-      showModalTwo: false,
+      isPlaying: false,
+      delay: null,
+      score: null,
+      showResults: false,
     };
   },
   methods: {
-    toggleModal() {
-      this.showModal = !this.showModal;
+    start() {
+      this.delay = 2000 + Math.random() * 5000;
+      this.isPlaying = true;
+      this.showResults = false;
     },
-    toggleModalTwo() {
-      this.showModalTwo = !this.showModalTwo;
+    endGame(reactionTime) {
+      this.score = reactionTime;
+      this.isPlaying = false;
+      this.showResults = true;
     },
   },
 };
 </script>
 
 <style>
-#app,
-.modals {
+#app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  color: #444;
   margin-top: 60px;
 }
-h1 {
-  border-bottom: 1px solid #ddd;
-  display: inline-block;
-  padding-bottom: 10px;
+button {
+  background: #0faf87;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 16px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  margin: 10px;
+}
+button[disabled] {
+  opacity: 0.2;
+  cursor: not-allowed;
 }
 </style>
